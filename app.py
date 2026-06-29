@@ -679,9 +679,21 @@ if show_map:
         st.bar_chart(type_dist)
     
     with col_chart2:
-        st.write("**Speed Distribution (knots)**")
-        speed_bins = pd.cut(vessel_df["speed"], bins=[0, 10, 14, 18, 25])
-        st.bar_chart(speed_bins.value_counts().sort_index())
+        st.write("**Speed Distribution by Range (knots)**")
+        # 속도 구간별 분류
+        speed_ranges = []
+        for speed in vessel_df["speed"]:
+            if speed < 10:
+                speed_ranges.append("8-10 kn")
+            elif speed < 14:
+                speed_ranges.append("10-14 kn")
+            elif speed < 18:
+                speed_ranges.append("14-18 kn")
+            else:
+                speed_ranges.append("18-25 kn")
+        
+        speed_dist = pd.Series(speed_ranges).value_counts()
+        st.bar_chart(speed_dist)
 
 # =========================================================================
 # MULTIMODAL ROUTE SELECTION
@@ -826,4 +838,4 @@ if st.session_state.run_simulation:
         st.line_chart(pd.DataFrame({"Risk": sorted(sim_result['risks'])[:100]}))
 
 st.sidebar.markdown("---")
-st.sidebar.info("ATLAS AI v4.5 - Real-time AIS Integration\n\n**MarineTraffic Style | 150+ Vessels | Global Coverage**")
+st.sidebar.info("ATLAS AI v4.6 - Real-time AIS Integration\n\n**MarineTraffic Style | 150+ Vessels | Global Coverage**")
